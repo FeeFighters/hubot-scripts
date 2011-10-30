@@ -15,7 +15,7 @@ module.exports = (robot) ->
         low = element.getElementsByTagName('low')[0].getAttribute('data');
         high = element.getElementsByTagName('high')[0].getAttribute('data');
         condition = element.getElementsByTagName('condition')[0].getAttribute('data');
-        strings.push "#{day} #{condition} high of: #{convertTemp(high)} low of: #{convertTemp(low)}"
+        strings.push "#{day} -- #{condition} -- high of: #{high}ºF / #{convertToC(high)}ºc -- low of: #{low}ºF / #{convertToC(low)}ºc"
 
       msg.send strings.join "\n"
 
@@ -30,11 +30,11 @@ module.exports = (robot) ->
       strings.push "Weather for #{city.getAttribute('data')}"
       currentCondition = body.getElementsByTagName('current_conditions')[0];
       conditions = currentCondition.getElementsByTagName('condition')[0];
-      temp = currentCondition.getElementsByTagName('temp_c')[0];
+      temp = currentCondition.getElementsByTagName('temp_f')[0];
       humidity = currentCondition.getElementsByTagName('humidity')[0];
 
       strings.push("Current conditions: #{conditions.getAttribute('data')} " +
-        "#{temp.getAttribute('data')}ºc")
+        "#{temp.getAttribute('data')}ºF / #{convertToC(temp.getAttribute('data'))}ºc")
 
       strings.push humidity.getAttribute('data')
       msg.send strings.join "\n"
@@ -44,7 +44,7 @@ module.exports = (robot) ->
     throw Error('No xml') if body.getElementsByTagName('weather')[0].childNodes.length == 0
     body
 
-  convertTemp = (faren) ->
+  convertToC = (faren) ->
     ((5 / 9) * (faren - 32)).toFixed 0
 
   query = (msg, cb) ->
